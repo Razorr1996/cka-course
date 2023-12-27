@@ -1,3 +1,3 @@
 [submodule "sandervanvugt-cka"]
-	path = sandervanvugt-cka
+	path = cka
 	url = https://github.com/sandervanvugt/cka.git
