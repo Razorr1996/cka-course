@@ -34,23 +34,7 @@ Vagrant.configure("2") do |config|
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
 
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Disable the default share of the current code directory. Doing this
-  # provides improved isolation between the vagrant box and your host
-  # by making sure your Vagrantfile isn't accessable to the vagrant box.
-  # If you use this you may want to enable additional shared subfolders as
-  # shown above.
-  # config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.dns.tld = "cka"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -69,20 +53,22 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
 
-  config.vm.define "master" do |master|
-    master.vm.hostname = "master"
+  config.vm.define "control" do |control|
+    control.vm.hostname = "control"
 
-    master.vm.provider "parallels" do |prl|
-      prl.name = "CKA master"
+    control.vm.provider "parallels" do |prl|
+      prl.name = "CKA control"
     end
   end
 
   (1..3).each { |worker_num|
-    config.vm.define "worker#{worker_num}" do |worker|
-      worker.vm.hostname = "worker#{worker_num}"
+    worker_name = "worker#{worker_num}"
+
+    config.vm.define worker_name do |worker|
+      worker.vm.hostname = worker_name
 
       worker.vm.provider "parallels" do |prl|
-        prl.name = "CKA worker#{worker_num}"
+        prl.name = "CKA #{worker_name}"
       end
     end
   }
