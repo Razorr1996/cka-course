@@ -35,15 +35,7 @@ then
 	# (Install containerd)
 
 	sudo apt-get update && sudo apt-get install -y containerd
-	# hopefully temporary bugfix as the containerd version provided in Ubu repo is tool old
-	# added Jan 26th 2023
-	# this needs to be updated when a recent enough containerd version will be in Ubuntu repos
-	sudo systemctl stop containerd
-	# cleanup old files from previous attempt if existing
-	[ -d bin ] && rm -rf bin
-	wget https://github.com/containerd/containerd/releases/download/v1.6.15/containerd-1.6.15-linux-${PLATFORM}.tar.gz 
-	tar xvf containerd-1.6.15-linux-${PLATFORM}.tar.gz
-	sudo mv bin/* /usr/bin/
+
 	# Configure containerd
 	sudo mkdir -p /etc/containerd
 	cat <<- TOML | sudo tee /etc/containerd/config.toml
@@ -62,4 +54,3 @@ version = 2
 	# Restart containerd
 	sudo systemctl restart containerd	
 fi
-
