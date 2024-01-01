@@ -11,6 +11,9 @@ then
 	exit 3
 fi
 
+# setting k8s version
+K8S_VERSION="1.28"
+
 # setting MYOS variable
 MYOS=$(hostnamectl | awk '/Operating/ { print $3 }')
 OSVERSION=$(hostnamectl | awk '/Operating/ { print $4 }')
@@ -23,10 +26,10 @@ then
 EOF
 	
 	sudo apt-get update && sudo apt-get install -y apt-transport-https curl
-	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-	cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-	deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOF
+
+	K8S_KEYRING_FILE="/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+	curl -fsSL "https://pkgs.k8s.io/core:/stable:/${K8S_VERSION}/deb/Release.key" | sudo gpg --dearmor -o "${K8S_KEYRING_FILE}"
+	echo "deb [signed-by=${K8S_KEYRING_FILE}] https://pkgs.k8s.io/core:/stable:/${K8S_VERSION}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 	sudo apt-get update
 	sudo apt-get install -y kubelet kubeadm kubectl
@@ -45,4 +48,4 @@ sysctl --system
 
 sudo crictl config --set \
     runtime-endpoint=unix:///run/containerd/containerd.sock
-echo 'after initializing the control node, follow instructions and use kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml to install the calico plugin (control node only). On the worker nodes, use sudo kubeadm join ... to join'
+echo 'after initializing the control node, follow instructions and use kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml to install the calico plugin (control node only). On the worker nodes, use sudo kubeadm join ... to join'
