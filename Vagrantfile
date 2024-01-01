@@ -27,6 +27,9 @@ Vagrant.configure("2") do |config|
     prl.memory = 4096
     prl.cpus = 4
 
+    # Uncomment for updating Parallels Tools
+    # prl.update_guest_tools = true
+
     prl.customize "post-import", ["set", :id, "--nested-virt", "on"]
   end
 
