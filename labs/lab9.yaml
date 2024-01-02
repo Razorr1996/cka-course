@@ -1,10 +1,39 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab9-test
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: lab9-allow-sleepybox1
+  namespace: restricted
+spec:
+  podSelector:
+    matchLabels:
+      lab9-target: "yes"
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+          podSelector:
+            matchLabels:
+              lab9-access: "yes"
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: webserver
   namespace: restricted
   labels:
     app: webserver
+    lab9-target: "yes"
 spec:
   containers:
     - name: webserver
@@ -17,6 +46,7 @@ metadata:
   namespace: default
   labels:
     app: sleepybox1
+    lab9-access: "yes"
 spec:
   containers:
     - name: sleepybox1
