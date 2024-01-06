@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab4-ns
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lab4-pv
+  namespace: lab4-ns
+spec:
+  storageClassName: lab4-sc
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lab4-pvc
+  namespace: lab4-ns
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+  storageClassName: lab4-sc
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab4
+  namespace: lab4-ns
+  labels:
+    app: lab4
+spec:
+  containers:
+    - name: lab4
+      image: nginx
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: lab4
+  volumes:
+    - name: lab4
+      persistentVolumeClaim:
+        claimName: lab4-pvc
