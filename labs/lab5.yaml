@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab5
+  labels:
+    app: lab5
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lab5
+  template:
+    metadata:
+      name: lab5
+      labels:
+        app: lab5
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab5
+spec:
+  selector:
+    app: lab5
+  ports:
+    - protocol: TCP
+      port: 80
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lab5
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: my.fruit
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lab5
+                port:
+                  number: 80
