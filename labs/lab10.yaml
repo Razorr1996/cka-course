@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: lab10-allow-view-pods
+rules:
+  - verbs:
+      - list
+      - get
+      - watch
+    resources:
+      - pods
+    apiGroups:
+      - ""
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: lab10-role-binding
+  namespace: default
+roleRef:
+  kind: Role
+  name: lab10-allow-view-pods
+  apiGroup: ""
+subjects:
+  - kind: Group
+    name: "system:authenticated"
