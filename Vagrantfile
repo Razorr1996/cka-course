@@ -46,4 +46,12 @@ Vagrant.configure("2") do |config|
 
   end
 
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "config.yml"
+    ansible.compatibility_mode = "2.0"
+  end
+
+  config.vm.provision "shell", path: "cka/setup-container.sh"
+  config.vm.provision "shell", path: "cka/setup-kubetools.sh"
+
 end

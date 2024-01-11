@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: SSH key
+      authorized_key:
+        user: vagrant
+        state: present
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+    - name: Install tools
+      apt:
+        name:
+          - bash-completion
+          - unzip
+        update_cache: true
+        autoclean: true
+        autoremove: true
