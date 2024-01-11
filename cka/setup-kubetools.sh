@@ -12,7 +12,7 @@ then
 fi
 
 # setting k8s version
-K8S_VERSION="1.28"
+K8S_VERSION="v1.28"
 
 # setting MYOS variable
 MYOS=$(hostnamectl | awk '/Operating/ { print $3 }')
@@ -28,6 +28,7 @@ EOF
 	sudo apt-get update && sudo apt-get install -y apt-transport-https curl
 
 	K8S_KEYRING_FILE="/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+	rm -f "$K8S_KEYRING_FILE" 2>/dev/null
 	curl -fsSL "https://pkgs.k8s.io/core:/stable:/${K8S_VERSION}/deb/Release.key" | sudo gpg --dearmor -o "${K8S_KEYRING_FILE}"
 	echo "deb [signed-by=${K8S_KEYRING_FILE}] https://pkgs.k8s.io/core:/stable:/${K8S_VERSION}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
