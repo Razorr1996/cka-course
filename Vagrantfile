@@ -1,62 +1,49 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-CKA_WORKER_NUM = 3
+VM_MEMORY = 4096
+VM_CPUS = 2
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
+GROUPS = {
+  :cka1 => { :control_num => 1, :worker_num => 2 },
+}
+
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
+  config.vm.box = "basa62/ubuntu-22.04-arm64"
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "bento/ubuntu-22.04-arm64"
+  config.vm.box_check_update = false
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider "parallels" do |prl|
-    prl.memory = 4096
-    prl.cpus = 4
-
-    # Uncomment for updating Parallels Tools
-    # prl.update_guest_tools = true
+    prl.memory = VM_MEMORY
+    prl.cpus = VM_CPUS
 
     prl.customize "post-import", ["set", :id, "--nested-virt", "on"]
   end
 
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
-
-  cka_nodes = ["control"] + (1..CKA_WORKER_NUM).map { |i| "worker#{i}" }
-
-  cka_nodes.each do |node_name|
-    config.vm.define node_name do |cfg|
-      cfg.vm.hostname = node_name
-
-      cfg.vm.provider "parallels" do |prl|
-        prl.name = "CKA #{node_name}"
-      end
-    end
+  if Vagrant.has_plugin?("vagrant-group")
+    config.group.groups = {}
   end
 
-  if Vagrant.has_plugin?("vagrant-group")
-    config.group.groups = {
-      "cka" => cka_nodes,
-    }
+  GROUPS.each do |group, settings|
+    control_nodes = (1..settings[:control_num]).map { |i| "#{group}-control#{i}" }
+    worker_nodes = (1..settings[:worker_num]).map { |i| "#{group}-worker#{i}" }
+    nodes = control_nodes + worker_nodes
+
+    nodes.each do |node_name|
+      config.vm.define node_name do |cfg|
+        cfg.vm.hostname = node_name
+
+        cfg.vm.provider "parallels" do |prl|
+          prl.name = node_name
+        end
+      end
+
+    end
+
+    if Vagrant.has_plugin?("vagrant-group")
+      config.group.groups.merge!(group.to_s => nodes)
+    end
+
   end
 
 end
