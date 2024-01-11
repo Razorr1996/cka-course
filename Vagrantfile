@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+CKA_WORKER_NUM = 3
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -39,24 +41,22 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
 
-  config.vm.define "control" do |control|
-    control.vm.hostname = "control"
+  cka_nodes = ["control"] + (1..CKA_WORKER_NUM).map { |i| "worker#{i}" }
 
-    control.vm.provider "parallels" do |prl|
-      prl.name = "CKA control"
+  cka_nodes.each do |node_name|
+    config.vm.define node_name do |cfg|
+      cfg.vm.hostname = node_name
+
+      cfg.vm.provider "parallels" do |prl|
+        prl.name = "CKA #{node_name}"
+      end
     end
   end
 
-  (1..3).each { |worker_num|
-    worker_name = "worker#{worker_num}"
-
-    config.vm.define worker_name do |worker|
-      worker.vm.hostname = worker_name
-
-      worker.vm.provider "parallels" do |prl|
-        prl.name = "CKA #{worker_name}"
-      end
-    end
-  }
+  if Vagrant.has_plugin?("vagrant-group")
+    config.group.groups = {
+      "cka" => cka_nodes,
+    }
+  end
 
 end
