@@ -1,0 +1,15 @@
+# Copy this file to worker2:/etc/kubernetes/manifests/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab129
+  labels:
+    app: lab129
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: nginx
+          protocol: TCP
