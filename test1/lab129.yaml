@@ -1,3 +1,4 @@
+# Creating a Static Pod
 # Copy this file to worker2:/etc/kubernetes/manifests/
 apiVersion: v1
 kind: Pod
