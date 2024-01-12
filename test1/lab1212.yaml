@@ -8,19 +8,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lab132-normal
+  name: lab1212-normal
   labels:
-    app: lab132-normal
+    app: lab1212-normal
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: lab132-normal
+      app: lab1212-normal
   template:
     metadata:
-      name: lab132-normal
+      name: lab1212-normal
       labels:
-        app: lab132-normal
+        app: lab1212-normal
     spec:
       containers:
         - name: nginx
@@ -29,19 +29,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lab132-tolerations
+  name: lab1212-tolerations
   labels:
-    app: lab132-tolerations
+    app: lab1212-tolerations
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: lab132-tolerations
+      app: lab1212-tolerations
   template:
     metadata:
-      name: lab132-tolerations
+      name: lab1212-tolerations
       labels:
-        app: lab132-tolerations
+        app: lab1212-tolerations
     spec:
       tolerations:
         - key: type

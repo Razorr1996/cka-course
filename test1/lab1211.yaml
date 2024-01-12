@@ -23,19 +23,19 @@ rules:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: lab131
+  name: lab1211
   namespace: access
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: lab131
+  name: lab1211
   namespace: access
 subjects:
   - kind: ServiceAccount
-    name: lab131
+    name: lab1211
     namespace: access
 roleRef:
   apiGroup: ""
   kind: Role
-  name: lab131
+  name: lab1211
