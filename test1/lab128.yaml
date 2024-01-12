@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: limited
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: lab128
+  namespace: limited
+spec:
+  hard:
+    pods: "5"
+    memory: "2Gi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab128deploy
+  namespace: limited
+  labels:
+    app: lab128deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lab128deploy
+  template:
+    metadata:
+      name: lab128deploy
+      labels:
+        app: lab128deploy
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "256Mi"
