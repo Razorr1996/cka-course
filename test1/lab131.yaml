@@ -1,0 +1,41 @@
+# Configuring Cluster Access
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: access
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: lab131
+  namespace: access
+rules:
+  - apiGroups:
+      - ""
+    verbs:
+      - create
+    resources:
+      - pods
+      - deployments
+      - daemonsets
+      - statefulsets
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: lab131
+  namespace: access
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: lab131
+  namespace: access
+subjects:
+  - kind: ServiceAccount
+    name: lab131
+    namespace: access
+roleRef:
+  apiGroup: ""
+  kind: Role
+  name: lab131
