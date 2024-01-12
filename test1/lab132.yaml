@@ -1,0 +1,51 @@
+# Configuring Taints and Tolerations
+
+# Taint:
+# kubectl taint node cka1-worker2 type=db:NoSchedule
+
+# Untaint:
+# kubectl taint node cka1-worker2 type=db:NoSchedule-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab132-normal
+  labels:
+    app: lab132-normal
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: lab132-normal
+  template:
+    metadata:
+      name: lab132-normal
+      labels:
+        app: lab132-normal
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab132-tolerations
+  labels:
+    app: lab132-tolerations
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: lab132-tolerations
+  template:
+    metadata:
+      name: lab132-tolerations
+      labels:
+        app: lab132-tolerations
+    spec:
+      tolerations:
+        - key: type
+          value: db
+      containers:
+        - name: nginx
+          image: nginx
