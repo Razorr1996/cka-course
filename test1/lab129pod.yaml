@@ -3,14 +3,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: lab129
+  name: lab129pod
   labels:
-    app: lab129
+    run: lab129pod
 spec:
   containers:
     - name: nginx
       image: nginx
-      ports:
-        - containerPort: 80
-          name: nginx
-          protocol: TCP

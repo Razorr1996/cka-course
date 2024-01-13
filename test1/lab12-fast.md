@@ -7,7 +7,7 @@ kubectl apply -f lab123.yaml
 
 # Managing Application Initialization
 ```shell
-kubectl run lab124deploy --image=busybox --dry-run=client -o yaml -- sleep 30 > lab124deploy.yaml
+kubectl create deployment lab124deploy --image=busybox --dry-run=client -o yaml -- sleep 30 > lab124deploy.yaml
 # edit
 kubectl apply -f lab124deploy.yaml
 ```
