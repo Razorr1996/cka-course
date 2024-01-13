@@ -12,7 +12,7 @@ then
 fi
 
 # setting k8s version
-K8S_VERSION="v1.28"
+K8S_VERSION="${K8S_VERSION:="v1.28"}"
 
 # setting MYOS variable
 MYOS=$(hostnamectl | awk '/Operating/ { print $3 }')

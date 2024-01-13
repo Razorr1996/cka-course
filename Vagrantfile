@@ -6,6 +6,7 @@ VM_CPUS = 2
 
 GROUPS = {
   :cka1 => { :control_num => 1, :worker_num => 2 },
+  # :cka2 => { :control_num => 3, :worker_num => 2, :env => { "K8S_VERSION" => "v1.27" } },
 }
 
 Vagrant.configure("2") do |config|
@@ -28,6 +29,7 @@ Vagrant.configure("2") do |config|
     control_nodes = (1..settings[:control_num]).map { |i| "#{group}-control#{i}" }
     worker_nodes = (1..settings[:worker_num]).map { |i| "#{group}-worker#{i}" }
     nodes = control_nodes + worker_nodes
+    env = settings[:env] || {}
 
     nodes.each do |node_name|
       config.vm.define node_name do |cfg|
@@ -36,6 +38,15 @@ Vagrant.configure("2") do |config|
         cfg.vm.provider "parallels" do |prl|
           prl.name = node_name
         end
+
+        cfg.vm.provision "shell",
+          path: "cka/setup-container.sh",
+          env: env
+
+        cfg.vm.provision "shell",
+          path: "cka/setup-kubetools.sh",
+          env: env
+
       end
 
     end
@@ -50,8 +61,5 @@ Vagrant.configure("2") do |config|
     ansible.playbook = "config.yml"
     ansible.compatibility_mode = "2.0"
   end
-
-  config.vm.provision "shell", path: "cka/setup-container.sh"
-  config.vm.provision "shell", path: "cka/setup-kubetools.sh"
 
 end
