@@ -2,14 +2,8 @@
 # script that runs 
 # https://kubernetes.io/docs/setup/production-environment/container-runtime
 
-# changes March 14 2023: introduced $PLATFORM to have this work on amd64 as well as arm64
-
 # setting MYOS variable
 MYOS=$(hostnamectl | awk '/Operating/ { print $3 }')
-OSVERSION=$(hostnamectl | awk '/Operating/ { print $4 }')
-# beta: building in ARM support
-[ $(arch) = aarch64 ] && PLATFORM=arm64
-[ $(arch) = x86_64 ] && PLATFORM=amd64
 
 if [ $MYOS = "Ubuntu" ]
 then
