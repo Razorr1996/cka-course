@@ -59,7 +59,7 @@ echo this script is based on the NIC name ens33
 echo if your networkcard has a different name, edit keepalived.conf
 echo before continuing and change "interface ens33" to match your config
 echo .
-echo this script will create a keepalived apiserver at 192.168.29.100
+echo this script will create a keepalived apiserver at 172.18.10.100
 echo if this IP address does not match your network configuration,
 echo manually change the check_apiserver.sh file before continuing
 echo also change the IP address in keepalived.conf
@@ -77,15 +77,15 @@ do
 done
 
 # generating and distributing SSH keys
-ssh-keygen
-ssh-copy-id control1
-ssh-copy-id control2
-ssh-copy-id control3
+#ssh-keygen
+#ssh-copy-id control1
+#ssh-copy-id control2
+#ssh-copy-id control3
 
 # configuring sudo for easier access
-sudo sh -c "echo 'Defaults timestamp_type=global,timestamp_timeout=60' >> /etc/sudoers"
-sudo scp -p /etc/sudoers student@control2:/tmp/ && ssh -t control2 'sudo -S chown root:root /tmp/sudoers' && ssh -t control2 'sudo -S cp -p /tmp/sudoers /etc/'
-sudo scp -p /etc/sudoers student@control3:/tmp/ && ssh -t control3 'sudo -S chown root:root /tmp/sudoers' && ssh -t control3 'sudo -S cp -p /tmp/sudoers /etc/'
+#sudo sh -c "echo 'Defaults timestamp_type=global,timestamp_timeout=60' >> /etc/sudoers"
+#sudo scp -p /etc/sudoers control2:/tmp/ && ssh -t control2 'sudo -S chown root:root /tmp/sudoers' && ssh -t control2 'sudo -S cp -p /tmp/sudoers /etc/'
+#sudo scp -p /etc/sudoers control3:/tmp/ && ssh -t control3 'sudo -S chown root:root /tmp/sudoers' && ssh -t control3 'sudo -S cp -p /tmp/sudoers /etc/'
 #ssh control2 sudo -S sh -c "echo 'Defaults timestamp_type=global,timestamp_timeout=60' >> /etc/sudoers"
 #ssh control3 sudo -S sh -c "echo 'Defaults timestamp_type=global,timestamp_timeout=60' >> /etc/sudoers"
 
@@ -110,8 +110,8 @@ scp check_apiserver.sh control3:/tmp && ssh -t control3 'sudo -S cp /tmp/check_a
 sudo cp keepalived.conf keepalived-control2.conf
 sudo cp keepalived.conf keepalived-control3.conf
 
-sudo sed -i 's/state MASTER/state SLAVE/' keepalived-control2.conf
-sudo sed -i 's/state MASTER/state SLAVE/' keepalived-control3.conf
+sudo sed -i 's/state MASTER/state BACKUP/' keepalived-control2.conf
+sudo sed -i 's/state MASTER/state BACKUP/' keepalived-control3.conf
 sudo sed -i 's/priority 255/priority 254/' keepalived-control2.conf
 sudo sed -i 's/priority 255/priority 253/' keepalived-control3.conf
 
@@ -142,4 +142,4 @@ ssh control3 sudo -S systemctl enable keepalived --now
 ssh control3 sudo -S systemctl enable haproxy --now
 
 echo setup is now done, please verify
-echo the first node that started the services - normally control1 -  should run the virtual IP address 192.168.29.100
+echo the first node that started the services - normally control1 -  should run the virtual IP address 172.18.10.100
