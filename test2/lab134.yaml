@@ -1,0 +1,35 @@
+# Configuring Application Logging
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: lab134
+  name: lab134
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab134
+  template:
+    metadata:
+      labels:
+        app: lab134
+    spec:
+      containers:
+        - command:
+            - sh
+            - -c
+            - "while true; do date >> /output/date.log; sleep 60; done"
+          image: busybox
+          name: busybox
+          volumeMounts:
+            - mountPath: /output
+              name: shared-dir
+        - image: nginx
+          name: nginx
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: shared-dir
+      volumes:
+        - name: shared-dir
+          emptyDir: {}
