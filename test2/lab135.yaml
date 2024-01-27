@@ -1,0 +1,52 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: lab135-sc
+provisioner: kubernetes.io/no-provisioner
+allowVolumeExpansion: true
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lab135
+spec:
+  storageClassName: lab135-sc
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  hostPath:
+    path: "/data-lab135"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lab135
+spec:
+  storageClassName: lab135-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi # -> 200Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: storage
+  name: storage
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      resources: {}
+      volumeMounts:
+        - mountPath: /data
+          name: data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: lab135
