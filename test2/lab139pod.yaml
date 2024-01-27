@@ -1,0 +1,16 @@
+# Managing Scheduling
+# ---
+# kubectl k label nodes cka-worker2 storage=ssd
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: lab139pod
+  name: lab139pod
+spec:
+  nodeSelector:
+    storage: ssd
+  containers:
+    - image: nginx
+      name: nginx
