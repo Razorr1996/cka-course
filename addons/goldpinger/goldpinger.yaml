@@ -53,6 +53,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: REFRESH_INTERVAL
+              value: "5"
           image: "bloomberg/goldpinger:3.9.0"
           imagePullPolicy: Always
           securityContext:
@@ -60,11 +62,11 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             limits:
-              cpu: 500m
-              memory: 100Mi
+              cpu: 50m
+              memory: 50Mi
             requests:
-              cpu: 500m
-              memory: 100Mi
+              cpu: 50m
+              memory: 50Mi
           ports:
             - containerPort: 8080
               name: http
