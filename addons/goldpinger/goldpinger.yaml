@@ -65,10 +65,11 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             limits:
-              memory: 80Mi
+              cpu: 500m
+              memory: 100Mi
             requests:
-              cpu: 1m
-              memory: 40Mi
+              cpu: 500m
+              memory: 100Mi
           ports:
             - containerPort: 8080
               name: http
