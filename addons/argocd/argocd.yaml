@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 6.0.7
+    helm:
+      parameters:
+      - name: server.service.nodePortHttp
+        value: "31080"
+      - name: applicationSet.certificate.secretName
+        value: argocd-application-controller-tls
+      - name: server.service.nodePortHttps
+        value: "31443"
+      - name: server.service.type
+        value: NodePort
+      - name: global.revisionHistoryLimit
+        value: "10"
+      - name: controller.revisionHistoryLimit
+        value: "10"
+      - name: global.networkPolicy.create
+        value: "true"
