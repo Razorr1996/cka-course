@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: multi-container-playground
+  name: multi-container-playground
+spec:
+  volumes:
+  - name: shared
+    emptyDir: {}
+  containers:
+  - image: nginx:1.17.6-alpine
+    name: c1
+    volumeMounts:
+    - mountPath: /shared-data
+      name: shared
+    env:
+    - name: MY_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  - image: busybox:1.31.1
+    name: c2
+    volumeMounts:
+    - mountPath: /shared-data
+      name: shared
+    command:
+    - sh
+    - -c
+    - "while true; do date >> /shared-data/date.log; sleep 1; done"
+  - image: busybox:1.31.1
+    name: c3
+    volumeMounts:
+    - mountPath: /shared-data
+      name: shared
+    command:
+    - sh
+    - -c
+    - "tail -f /shared-data/date.log"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always

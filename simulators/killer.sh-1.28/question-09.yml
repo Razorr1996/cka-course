@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: manual-schedule
+  name: manual-schedule
+spec:
+  nodeName: cluster2-controlplane1
+  containers:
+  - image: httpd:2.4-alpine
+    name: manual-schedule
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
