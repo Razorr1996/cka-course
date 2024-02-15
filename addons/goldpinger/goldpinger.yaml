@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       app: goldpinger
+  revisionHistoryLimit: 5
   template:
     metadata:
       annotations:
