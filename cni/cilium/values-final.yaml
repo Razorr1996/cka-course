@@ -1,0 +1,19 @@
+cluster:
+  name: ha
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList:
+    - 10.245.0.0/16
+operator:
+  replicas: 1
+serviceAccounts:
+  cilium:
+    name: cilium
+  operator:
+    name: cilium-operator
