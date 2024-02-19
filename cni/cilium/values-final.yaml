@@ -17,8 +17,3 @@ k8sServiceHost: 172.18.10.100
 k8sServicePort: 8443
 operator:
   replicas: 1
-serviceAccounts:
-  cilium:
-    name: cilium
-  operator:
-    name: cilium-operator
