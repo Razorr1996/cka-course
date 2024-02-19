@@ -1,5 +1,5 @@
-bpf:
-  masquerade: true
+#bpf:
+#  masquerade: true
 cluster:
   name: ha
 hubble:
@@ -12,8 +12,8 @@ ipam:
   operator:
     clusterPoolIPv4PodCIDRList:
     - 10.245.0.0/16
-kubeProxyReplacement: true
-k8sServiceHost: 172.18.10.100
-k8sServicePort: 8443
+#kubeProxyReplacement: true
+#k8sServiceHost: 172.18.10.100
+#k8sServicePort: 8443
 operator:
   replicas: 1
